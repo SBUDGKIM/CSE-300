@@ -93,8 +93,8 @@ const NewListForm = ({ onAdd, onCancel }) => {
         required
     />
         Off
-      <button type="submit">저장</button>
-      <button type="button" onClick={onCancel}>취소</button>
+      <button type="submit">Submit</button>
+      <button type="button" onClick={onCancel}>Cancel</button>
     </form>
   );
 };
