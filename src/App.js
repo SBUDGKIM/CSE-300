@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import SubscriptionList from './subscriptionList.js';
+import NewListForm from './newListForm.js';
 
-function App() {
+const App = () => {
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('subscriptions');
+    if (stored) {
+      setSubscriptions(JSON.parse(stored));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
+  }, [subscriptions]);
+
+  const handleAdd = (newSub) => {
+    setSubscriptions([...subscriptions, newSub]);
+    setShowForm(false);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ padding: '2rem' }}>
+      <h2>Subscription Reminder</h2>
+      {showForm ? (
+        <NewListForm onAdd={handleAdd} onCancel={() => setShowForm(false)} />
+      ) : (
+        <>
+          <button onClick={() => setShowForm(true)}>+ New Post</button>
+          <button onClick={() => {
+            localStorage.removeItem('subscriptions');
+            setSubscriptions([]);
+          }}>Delete All</button>
+          <SubscriptionList subscriptions={subscriptions} />
+        </>
+      )}
     </div>
   );
-}
+};
 
 export default App;
